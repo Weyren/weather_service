@@ -18,4 +18,5 @@ http://localhost:8080/api/cities/:id/forecasts/fullforecast/:date/:time/ -про
 
 
 При запуске через докер композ установить в файле конфигурации database: host: “db”
+
 При локальном запуске в файле конфигурации установить database: host: “localhost”
