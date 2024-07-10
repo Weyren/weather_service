@@ -1,0 +1,13 @@
+server:
+  port: "8080"
+
+database:
+  host: "localhost"
+  port: "5432"
+  user: "postgres"
+  password: "postgres"
+  dbname: "weather_service"
+
+api:
+  key: "925d1cb191ea87f8275e56f301cf1f9d"
+  interval: 60

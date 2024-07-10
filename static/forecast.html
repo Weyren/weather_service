@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Forecast</title>
+    <style>
+        .date-button {
+            display: block;
+            margin-bottom: 5px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #f0f0f0;
+            cursor: pointer;
+        }
+        .date-button:hover {
+            background-color: #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+<h2 id="cityName"></h2>
+<div id="forecastResult"></div>
+<div id="fullForecastResult"></div>
+<button onclick="window.history.back()">Back to Cities</button>
+
+<script>
+    document.addEventListener('DOMContentLoaded', async () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const cityId = urlParams.get('cityId');
+        const cityName = urlParams.get('cityName');
+        const country = urlParams.get('country');
+        const cityNameElement = document.getElementById('cityName');
+        const forecastResult = document.getElementById('forecastResult');
+
+        cityNameElement.textContent = `Weather Forecast for ${cityName}, ${country}`;
+
+        try {
+            const shortForecastResponse = await fetch(`http://localhost:8080/api/cities/${cityId}/forecasts/shortforecast`);
+            const shortForecast = await shortForecastResponse.json();
+
+            forecastResult.innerHTML = '';
+
+            const datesList = shortForecast.DateList.map(date => {
+                const dateButton = document.createElement('button');
+                dateButton.className = 'date-button';
+                dateButton.textContent = new Date(date).toLocaleDateString();
+                dateButton.addEventListener('click', () => {
+                    getFullForecast(cityId, date);
+                });
+                return dateButton;
+            });
+
+            forecastResult.innerHTML = `
+                    <h3>Short Forecast for ${shortForecast.City}, ${shortForecast.Country}</h3>
+                    <p>Avg temperature: ${shortForecast.AvgTemp.toFixed(2)} °C</p>
+                `;
+
+            datesList.forEach(button => forecastResult.appendChild(button));
+        } catch (error) {
+            console.error('Error fetching short forecast:', error);
+        }
+    });
+
+    async function getFullForecast(cityId, date) {
+        try {
+            const fullForecastResponse = await fetch(`http://localhost:8080/api/cities/${cityId}/forecasts/fullforecast/${date}`);
+            const fullForecast = await fullForecastResponse.json();
+
+            const fullForecastResult = document.getElementById('fullForecastResult');
+            fullForecastResult.innerHTML = `
+                    <h4>Full Forecast for ${new Date(date).toLocaleDateString()}</h4>
+                    <pre>${JSON.stringify(fullForecast, null, 2)}</pre>
+                `;
+        } catch (error) {
+            console.error('Error fetching full forecast:', error);
+        }
+    }
+</script>
+</body>
+</html>

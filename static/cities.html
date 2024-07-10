@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cities</title>
+    <style>
+        .city-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .city-item {
+            margin-bottom: 10px;
+        }
+        .city-button {
+            display: block;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #f0f0f0;
+            text-decoration: none;
+            color: #333;
+            cursor: pointer;
+        }
+        .city-button:hover {
+            background-color: #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+<h2>Cities</h2>
+<ul id="cityList" class="city-list"></ul>
+
+<script>
+    document.addEventListener('DOMContentLoaded', async () => {
+        const cityListElement = document.getElementById('cityList');
+
+        try {
+            const response = await fetch('http://localhost:8080/api/cities');
+            const cities = await response.json();
+
+            cities.forEach(city => {
+                const cityItem = document.createElement('li');
+                cityItem.className = 'city-item';
+
+                const cityButton = document.createElement('a');
+                cityButton.className = 'city-button';
+                cityButton.textContent = `${city.name}, ${city.country}`;
+                cityButton.href = `forecast.html?cityId=${city.id}&cityName=${city.name}&country=${city.country}`;
+
+                cityItem.appendChild(cityButton);
+                cityListElement.appendChild(cityItem);
+            });
+        } catch (error) {
+            console.error('Error fetching cities:', error);
+        }
+    });
+</script>
+</body>
+</html>
