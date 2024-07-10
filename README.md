@@ -20,3 +20,7 @@ http://localhost:8080/api/cities/:id/forecasts/fullforecast/:date/:time/ -про
 При запуске через докер композ установить в файле конфигурации database: host: “db”
 
 При локальном запуске в файле конфигурации установить database: host: “localhost”
+
+http://localhost:8080/static/cities.html - страничка со списком городов, по каждому можно перейти для получения полного прогноза на доступную дату
+
+
