@@ -13,6 +13,7 @@ type Proxy struct {
 	Port string
 }
 
+// GetResponseWithProxy get response with proxy (in some cases we need to use proxy to get data from OpenWeatherMap API)
 func GetResponseWithProxy(requestURL string, proxy Proxy) ([]byte, error) {
 	proxyURL, err := url.Parse(fmt.Sprintf("http://%s:%s", proxy.IP, proxy.Port))
 	if err != nil {

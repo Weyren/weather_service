@@ -20,7 +20,7 @@ func GetCoordinates(ctx context.Context, cityName string, appid string) (*models
 
 	params := url.Values{}
 	params.Add("q", cityName)
-	params.Add("limit", "1")
+	params.Add("limit", "5")
 	params.Add("appid", appid)
 
 	requestURL, _ := url.ParseRequestURI(baseURL)
@@ -30,6 +30,10 @@ func GetCoordinates(ctx context.Context, cityName string, appid string) (*models
 	resp, err := http.Get(requestURL.String())
 	if err != nil {
 		return nil, err
+	}
+
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("status code: %d", resp.StatusCode)
 	}
 
 	defer resp.Body.Close()

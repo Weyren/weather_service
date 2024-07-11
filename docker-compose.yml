@@ -1,33 +1,40 @@
 version: '3.8'
 
 services:
-  web:
-    build: .
+  db:
+    image: postgres:13
+    container_name: weather_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: weather_db
+    ports:
+      - "5432:5432"
     volumes:
-      - .:/app
-      - ./config.yml:/app/config.yml
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - weather_network
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: weather_service
     ports:
       - "8080:8080"
     depends_on:
-      - database
+      - db
     environment:
-      - DATABASE_HOST=database
-      - DATABASE_PORT=5432
-      - DATABASE_USER=postgres
-      - DATABASE_PASSWORD=postgres
-      - DATABASE_NAME=weather_service
-  database:
-    image: postgres:13-alpine
-    container_name: postgres-database
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: weather_service
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: weather_db
+    networks:
+      - weather_network
 
 volumes:
-  postgres_data:
+  db_data:
+
+networks:
+  weather_network:
