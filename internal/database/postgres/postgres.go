@@ -117,6 +117,7 @@ func (r *PostgresRepository) GetShortForecastByCityID(ctx context.Context, cityI
 		FROM forecasts
 		JOIN cities ON cities.id = forecasts.city_id
 		WHERE city_id = $1
+  		AND EXTRACT(DOW FROM date) >= EXTRACT(DOW FROM CURRENT_DATE)
 		ORDER BY date
 	`
 
